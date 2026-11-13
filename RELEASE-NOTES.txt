@@ -1,0 +1,60 @@
+Lakka for PS4 1.00  (build 2026-11-13, first release - partly tested, see below)
+===============================================================================
+
+Package: IV0000-LAKK00001_00-LAKKAPS4LOADER00.pkg  (Lakka 6.1 Generic.x86_64, RetroArch 1.22.2)
+Needs:   jailbroken PS4 with GoldHEN (tested 2.4), BinLoader on (port 9090), a TV on HDMI,
+         a controller (DualShock 4 over USB or Bluetooth).
+How to use, troubleshooting, building: README.md.  Credits: CREDITS.md.
+Source code: lakka-ps4-1.00-src.tar.xz (this project's code; links to all upstream sources
+are in README.md).
+
+What it is
+  Lakka - the RetroArch game console OS from the libretro team - running on the PS4.
+  Lakka's own system image (SYSTEM) is used exactly as released; the PS4 parts sit next to
+  it: a PS4 Linux kernel, a PS4 initramfs, and a small read-only layer with graphics drivers
+  that know the PS4 GPU. Your games, saves and settings live in Lakka's storage on the PS4
+  drive. Games and saves of the PS4 itself are not touched.
+
+Install, in short
+  1. Install the PKG, launch "Lakka for PS4" (copies ~1.2 GB).
+  2. Choose the storage size for ROMs, saves and settings (16 / 32 / 64 / 128 / 256 GB;
+     32 recommended; sizes that don't fit are marked with how much space they need).
+  3. The app reserves the space (live speed and time left), waits for the drive, then
+     starts Linux by itself. First boot: "Formatting Lakka storage", orange LED.
+  4. Lakka's menu. Later launches boot within seconds.
+  To go back to OrbisOS: Lakka's Main Menu > Shutdown or Restart (see Known limits).
+
+In this build
+  - Lakka 6.1 SYSTEM, unmodified (checksum checked against the official release).
+  - PS4 graphics: Mesa 25.1.9 (Lakka's own version) with PS4 Liverpool/Gladius support,
+    OpenGL (radeonsi) and Vulkan (RADV), built against Lakka's own LLVM 19.1.7 and libdrm.
+  - Kernel: Strawberry PS4 Linux 7.3.3 with Lakka's controller drivers (DualShock 3/4,
+    DualSense, Switch Pro/Joy-Con, Xbox, Steam, Logitech and generic USB pads),
+    SMB and NFS shares, exFAT/NTFS USB sticks; GPU, Wi-Fi and Bluetooth firmware built in.
+  - Fast storage setup: space reserved from OrbisOS (~60 MB/s on the tested Fat) instead
+    of a Linux zero-fill (~13 MB/s).
+  - Safe storage: the storage is only ever formatted while it is still empty; existing
+    storage is never formatted, not even after a failed mount.
+  - A failed boot shows the error, saves /data/linux/boot/lakka-error.txt and restarts into
+    OrbisOS after 60 s.
+  - HDMI is the only audio output on the Slim and the Fat (their S/PDIF pin is switched off;
+    it reports "plugged" on the Slim, which has no optical port).
+
+Tested (2026-11-13)
+  PS4 Fat CUH-1115A (Aeolia), stock drive, GoldHEN 2.4:
+    install with this app (16 GB storage: reserve 265 s at 61 MB/s, 30 s drive wait),
+    first boot (storage formatted) into Lakka's menu, controller, Bluetooth, Wi-Fi.
+  Not tested yet: HDMI audio, running games (cores), restart and shutdown from Lakka,
+    the PS4 Slim, Belize consoles, the PS4 Pro.
+  Not available: installing to a USB drive (the app offers the PS4 drive only).
+
+Known limits
+  - Updates come as a new PKG: Lakka's built-in updater is switched off (it would replace
+    SYSTEM with a build that has no PS4 support).
+  - Lakka's kernel modules don't load into the PS4 kernel; the drivers Lakka uses are
+    built in instead. Hardware Lakka supports through modules only may be missing.
+  - Lakka and ChromeOS for PS4 share /data/linux/boot: the app launched last decides what
+    boots. Both stay installed.
+
+Private use only: the PS4 GPU, Wi-Fi and Bluetooth firmware built into the kernel are not
+ours to redistribute, and the Lakka name and logo belong to the libretro team.

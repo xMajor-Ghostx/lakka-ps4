@@ -1,0 +1,8 @@
+#!/bin/sh
+# Release build: quiet initramfs output (errors and install progress still show),
+# kernel messages off the screen, clock from the network.
+initramfs_quiet=true
+echo 1 > /proc/sys/kernel/printk 2>/dev/null
+ps4_net_time
+# A kernel panic restarts the PS4 after 30 s instead of hanging (time for a photo).
+echo 30 > /proc/sys/kernel/panic 2>/dev/null

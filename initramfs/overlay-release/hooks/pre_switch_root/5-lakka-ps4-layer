@@ -1,0 +1,3 @@
+#!/bin/sh
+# Release build: the read-only PS4 layer (Mesa with Liverpool support) and HDMI audio.
+lakka_ps4_layer

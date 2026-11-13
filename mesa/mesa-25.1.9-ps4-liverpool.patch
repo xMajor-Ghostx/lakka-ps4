@@ -1,0 +1,108 @@
+PS4 Liverpool / Gladius support for Mesa 25.1.9 (radeonsi).
+
+Adapted from ps4-mesa.patch by centi07 (https://github.com/centi07/arch-ps4-aur),
+as maintained by DionKill (https://github.com/DionKill/ps4-video-archlinux):
+same chip IDs, ASIC ranges and raster config values, cut down to these 4 files
+for Mesa 25.1.9. The PS4 GPU work goes back to fail0verflow's ps4-radeon-patches.
+
+diff --git a/src/amd/addrlib/src/amdgpu_asic_addr.h b/src/amd/addrlib/src/amdgpu_asic_addr.h
+--- a/src/amd/addrlib/src/amdgpu_asic_addr.h
++++ b/src/amd/addrlib/src/amdgpu_asic_addr.h
+@@ -63,6 +63,8 @@
+ 
+ #define AMDGPU_SPECTRE_RANGE    0x01, 0x41 //#   1 <= x < 65
+ #define AMDGPU_SPOOKY_RANGE     0x41, 0x81 //#  65 <= x < 129
++#define AMDGPU_STARSHA_RANGE    0x61, 0x71 /* PS4 Liverpool (inside the Spooky range) */
++#define AMDGPU_STARSHP_RANGE    0x71, 0x81 /* PS4 Pro Gladius */
+ #define AMDGPU_KALINDI_RANGE    0x81, 0xA1 //# 129 <= x < 161
+ #define AMDGPU_GODAVARI_RANGE   0xA1, 0xFF //# 161 <= x < max
+ 
+@@ -136,6 +138,8 @@
+ 
+ #define ASICREV_IS_SPECTRE(r)          ASICREV_IS(r, SPECTRE)
+ #define ASICREV_IS_SPOOKY(r)           ASICREV_IS(r, SPOOKY)
++#define ASICREV_IS_STARSHA(r)          ASICREV_IS(r, STARSHA)
++#define ASICREV_IS_STARSHP(r)          ASICREV_IS(r, STARSHP)
+ #define ASICREV_IS_KALINDI(r)          ASICREV_IS(r, KALINDI)
+ #define ASICREV_IS_KALINDI_GODAVARI(r) ASICREV_IS(r, GODAVARI)
+ 
+diff --git a/src/amd/common/ac_gpu_info.c b/src/amd/common/ac_gpu_info.c
+--- a/src/amd/common/ac_gpu_info.c
++++ b/src/amd/common/ac_gpu_info.c
+@@ -743,6 +743,9 @@
+       case FAMILY_KV:
+          identify_chip2(SPECTRE, KAVERI);
+          identify_chip2(SPOOKY, KAVERI);
++         /* PS4: Starsha ranges lie inside Spooky; last match wins, so these come after. */
++         identify_chip2(STARSHA, LIVERPOOL);
++         identify_chip2(STARSHP, GLADIUS);
+          identify_chip2(KALINDI, KABINI);
+          identify_chip2(GODAVARI, KABINI);
+          break;
+@@ -1075,6 +1078,8 @@
+       case CHIP_VERDE:
+       case CHIP_HAINAN:
+       case CHIP_BONAIRE:
++      case CHIP_LIVERPOOL:
++      case CHIP_GLADIUS:
+       case CHIP_KAVERI:
+       case CHIP_ICELAND:
+       case CHIP_CARRIZO:
+@@ -2143,6 +2148,8 @@
+    case CHIP_PITCAIRN:
+    case CHIP_VERDE:
+    case CHIP_BONAIRE:
++   case CHIP_LIVERPOOL:
++   case CHIP_GLADIUS:
+    case CHIP_HAWAII:
+    case CHIP_TONGA:
+    case CHIP_FIJI:
+@@ -2186,6 +2193,15 @@
+       raster_config = 0x00000002;
+       raster_config_1 = 0x00000000;
+       break;
++   /* PS4 Liverpool / PS4 Pro Gladius: 2 SEs (values from the PS4 Mesa patches) */
++   case CHIP_LIVERPOOL:
++      raster_config = 0x2a00161a;
++      raster_config_1 = 0x00000000;
++      break;
++   case CHIP_GLADIUS:
++      raster_config = 0x2a00161a;
++      raster_config_1 = 0x0000002e;
++      break;
+    /* 2 SEs / 4 RBs */
+    case CHIP_BONAIRE:
+    case CHIP_POLARIS11:
+diff --git a/src/amd/common/amd_family.c b/src/amd/common/amd_family.c
+--- a/src/amd/common/amd_family.c
++++ b/src/amd/common/amd_family.c
+@@ -19,6 +19,8 @@
+    CASE(OLAND);
+    CASE(HAINAN);
+    CASE(BONAIRE);
++   CASE(LIVERPOOL);
++   CASE(GLADIUS);
+    CASE(KABINI);
+    CASE(KAVERI);
+    CASE(HAWAII);
+@@ -104,6 +106,8 @@
+    case CHIP_HAINAN:
+       return "hainan";
+    case CHIP_BONAIRE:
++   case CHIP_LIVERPOOL:
++   case CHIP_GLADIUS:
+       return "bonaire";
+    case CHIP_KABINI:
+       return "kabini";
+diff --git a/src/amd/common/amd_family.h b/src/amd/common/amd_family.h
+--- a/src/amd/common/amd_family.h
++++ b/src/amd/common/amd_family.h
+@@ -80,6 +80,8 @@
+    CHIP_HAINAN,
+    /* GFX7 (Sea Islands) */
+    CHIP_BONAIRE,
++   CHIP_LIVERPOOL,      /* PS4 (Starsha), after Bonaire so all GFX7 checks apply */
++   CHIP_GLADIUS,        /* PS4 Pro (Starsha Pro) */
+    CHIP_KAVERI,
+    CHIP_KABINI,
+    CHIP_HAWAII,         /* Radeon 290, 390 */

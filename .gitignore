@@ -1,0 +1,12 @@
+# build outputs and downloads (not in the repo; see README "Building")
+*.pkg
+*.sqfs
+*.cpio.gz
+out/
+dl/
+kbuild-*/
+mesa/src/
+mesa/build/
+mesa/out/
+ps4-linux-pkg/installer/assets/
+ps4-linux-pkg/installer/build/
