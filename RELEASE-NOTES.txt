@@ -2,7 +2,8 @@ Lakka for PS4 1.00  (build 2026-11-13, first release - partly tested, see below)
 ===============================================================================
 
 Package: IV0000-LAKK00001_00-LAKKAPS4LOADER00.pkg  (Lakka 6.1 Generic.x86_64, RetroArch 1.22.2)
-Needs:   jailbroken PS4 with GoldHEN (tested 2.4), BinLoader on (port 9090), a TV on HDMI,
+Needs:   jailbroken PS4 on firmware 5.05 up to 14.00, GoldHEN (tested 2.4), BinLoader on
+         (port 9090), a TV on HDMI,
          a controller (DualShock 4 over USB or Bluetooth).
 How to use, troubleshooting, building: README.md.  Credits: CREDITS.md.
 Source code: lakka-ps4-1.00-src.tar.xz (this project's code; links to all upstream sources

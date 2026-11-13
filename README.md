@@ -3,7 +3,8 @@
 Lakka 6.1 (RetroArch) on a jailbroken PS4, installed from one PKG.
 
 ## What you need
-- A PS4 on a firmware with GoldHEN (tested: 2.4), BinLoader enabled (port 9090).
+- A PS4 on firmware 5.05 up to 14.00 (the range the Linux loader supports) with GoldHEN
+  (tested: 2.4), BinLoader enabled (port 9090).
 - A TV on HDMI, a controller (DualShock 4 over USB or Bluetooth).
 - Free space on the PS4 drive: ~1.2 GB for the files, plus the storage you choose, plus
   10 GB that the app always leaves free.
